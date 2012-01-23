@@ -1,3 +1,5 @@
+# Process the unix command line of the pipeline.
+
 import getopt
 import sys
 
