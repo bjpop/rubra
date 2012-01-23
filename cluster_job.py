@@ -7,43 +7,58 @@ from time import sleep
 from tempfile import NamedTemporaryFile
 import os
 
+# XXX maybe these values could be supplied in a config file?
+QSTAT_MAX_TRIES = 5   # number of times to try qstat before failing
+QSTAT_ERROR_DELAY = 1 # seconds to sleep while waiting for qstat to recover
+QSTAT_DELAY = 10      # seconds to sleep while waiting for job to complete
+
 # this assumes that qstat info for a job will stick around for a while after the job has finished.
 def isJobCompleted(jobID):
-    (stdout, stderr, exitStatus) = shellCommand("qstat -f %s" % jobID)
-    if exitStatus != 0:
-        return (True, exitStatus)
-    else:
-        jobState = None
-        exitStatus = None
-        for line in stdout.split('\n'):
-            ws = line.split()
-            if len(ws) == 3:
-                if ws[0] == 'job_state' and ws[1] == '=':
-                    jobState = ws[2]
-                elif ws[0] == 'exit_status' and ws[1] == '=' and ws[2].isdigit():
-                    exitStatus = int(ws[2])
-        if jobState.upper() == 'C':
-            return (True, exitStatus)
-        else:
-            return (False, exitStatus)
+   count = 0
+   while True:
+       (stdout, stderr, exitStatus) = shellCommand("qstat -f %s" % jobID)
+       # qstat appears to have worked correctly, we can stop trying.
+       if exitStatus == 0 or count >= QSTAT_MAX_TRIES:
+           break
+       count += 1
+       sleep(QSTAT_ERROR_DELAY)
+   if exitStatus != 0:
+       #return (True, exitStatus)
+       raise Exception("qstat -f %s returned non-zero exit status %d times, panicking" % (jobID, count))
+   else:
+       # try to fetch the exit status of the job command from the output of qstat.
+       jobState = None
+       exitStatus = None
+       for line in stdout.split('\n'):
+           ws = line.split()
+           if len(ws) == 3:
+               if ws[0] == 'job_state' and ws[1] == '=':
+                   jobState = ws[2]
+               elif ws[0] == 'exit_status' and ws[1] == '=' and ws[2].isdigit():
+                   exitStatus = int(ws[2])
+       if jobState.upper() == 'C':
+           # Job has completed.
+           return (True, exitStatus)
+       else:
+           # Job has not completed.
+           return (False, exitStatus)
 
 # returns exit status of job (or None if it can't be determined)
 def waitForJobCompletion(jobID):
-    isFinished, exitCode = isJobCompleted(jobID)
-    while(not isFinished):
-        sleep(10)
-        isFinished, exitCode = isJobCompleted(jobID)
-    return exitCode
+   isFinished, exitCode = isJobCompleted(jobID)
+   while(not isFinished):
+       sleep(QSTAT_DELAY)
+       isFinished, exitCode = isJobCompleted(jobID)
+   return exitCode
 
 # returns exit status of job (or None if it can't be determined)
-def runJobAndWait(script, stage, options):
-    logDir = options.pipeline['logDir']
+def runJobAndWait(script, stage, logDir='', verbose=0):
     jobID = script.launch()
     prettyJobID = jobID.split('.')[0]
     logFilename = os.path.join(logDir, stage + '.' + prettyJobID + '.pbs')
     with open(logFilename, 'w') as logFile:
         logFile.write(str(script))
-    if options.pipeline['verbose'] > 0:
+    if verbose > 0:
         print('stage = %s, jobID = %s' % (stage, prettyJobID))
     return waitForJobCompletion(jobID)
 
