@@ -1,3 +1,6 @@
+# Generate a PBS script for a job, and general utilities for
+# waiting for a job to complete.
+
 from shell_command import shellCommand
 import sys
 from time import sleep
@@ -44,6 +47,7 @@ def runJobAndWait(script, stage, options):
         print('stage = %s, jobID = %s' % (stage, prettyJobID))
     return waitForJobCompletion(jobID)
 
+# Generate a PBS script for a job.
 class PBS_Script(object):
     def __init__(self, command, walltime=None, name=None, memInGB=None, queue='batch', moduleList=None, logDir=None):
         self.command = command
@@ -57,9 +61,10 @@ class PBS_Script(object):
         self.moduleList = moduleList
         self.logDir = logDir
 
+    # render the job script as a string.
     def __str__(self):
         script = ['#!/bin/bash']
-        # XXX fixme 
+        # XXX fixme
         # should include job id in the output name.
         # should use the proper log directory.
         script.append('#PBS -q %s' % self.queue)
@@ -83,6 +88,8 @@ class PBS_Script(object):
         script.append(self.command)
         return '\n'.join(script) + '\n'
 
+    # create a temporary file to store the job script and then
+    # launch it with qsub.
     def launch(self):
         file = NamedTemporaryFile()
         file.write(str(self))
