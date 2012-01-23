@@ -1,3 +1,5 @@
+# Run a shell command and capture its stdout, stderr and exit status.
+
 import subprocess
 
 def shellCommand(command):
