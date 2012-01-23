@@ -1,3 +1,5 @@
+# Various useful utilities for the pipeline.
+
 import os.path
 import sys
 import yaml
@@ -9,6 +11,7 @@ from shell_command import shellCommand
 from cluster_job import (PBS_Script, runJobAndWait)
 import re
 
+# XXX I don't think the defaults really belong here.
 defaultOptionsModule = 'exome_pipeline_config'
 defaultWalltime = None # use the default walltime of the scheduler
 defaultModules = []
