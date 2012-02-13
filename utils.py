@@ -12,7 +12,7 @@ from cluster_job import (PBS_Script, runJobAndWait)
 import re
 
 # XXX I don't think the defaults really belong here.
-defaultOptionsModule = 'exome_pipeline_config'
+defaultOptionsModule = 'pipeline_config'
 defaultWalltime = None # use the default walltime of the scheduler
 defaultModules = []
 defaultQueue = 'batch'
@@ -84,8 +84,9 @@ def distributedCommand(stage, comm, options):
     queue = getStageOptions(options, stage, 'queue')
     mem = getStageOptions(options, stage, 'memInGB')
     logDir = options.pipeline['logDir']
+    verbosity = options.pipeline['verbose']
     script = PBS_Script(command=comm, walltime=time, name=stage, memInGB=mem, queue=queue, moduleList=mods, logDir=logDir)
-    return runJobAndWait(script, stage, options)
+    return runJobAndWait(script, stage, logDir, verbosity)
 
 # check the exit status of the command and if == 0 then write a checkpoint file to indicate success.
 def runStageCheck(stage, flag_file, logger, options, *args):
