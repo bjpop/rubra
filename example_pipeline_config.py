@@ -5,7 +5,8 @@ pipeline = {
    "procs": 2,
    "verbose": 1,
    "end": ["total"],
-   "force": []
+   "force": [],
+   "rebuild" : "fromstart"
 }
 stageDefaults = {
    "distributed": True,

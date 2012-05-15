@@ -37,13 +37,18 @@ def get_cmdline_args():
         if o == "--opts":
             args.opts = a
         elif o == "--style":
-            args.style = a
+            if a in ("run", "print", "flowchart"):
+                args.style = a
+            else:
+                exit("Invalid style argument, must be one of: run, print, flowchart.")
         elif o in ('-h', '--help'):
             usage()
             sys.exit(0)
         elif o == '--verbose':
             if a in ('0','1','2'):
                 args.verbose = int(a)
+            else:
+                exit("Invalid verbose level, must be one of: 0, 1, 2.")
         elif o == '--force':
             if args.force == None:
                 args.force = [a]
@@ -57,4 +62,6 @@ def get_cmdline_args():
         elif o == '--rebuild':
             if a in ('fromtargets', 'fromstart'):
                 args.rebuild = a
+            else:
+                exit("Invalid rebuild argument, must be one of: fromtargets, fromstart.")
     return args
