@@ -153,7 +153,7 @@ def validateOptions(options):
     return options
 
 def getOptionsModule(args):
-    if args.opts is not None:
+    if args.opts != None:
         return args.opts
     else:
         return defaultOptionsModule
@@ -164,14 +164,16 @@ def getOptions(args):
         options = __import__(configModule)
     except ImportError:
         exit('Could not find configuation file: %s' % (configModule + '.py'))
-    if args.style is not None:
+    if args.style != None:
         options.pipeline['style'] = args.style
-    if args.verbose is not None:
+    if args.verbose != None:
         options.pipeline['verbose'] = args.verbose
-    if args.force is not None:
+    if args.force != None:
         options.pipeline['force'] = args.force
-    if args.end is not None:
+    if args.end != None:
         options.pipeline['end'] = args.end
+    if args.rebuild != None:
+        options.pipeline['rebuild'] = args.rebuild
     return options
 
 def mkLogFile(logDir, fullFilename, extension):

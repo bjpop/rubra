@@ -43,12 +43,20 @@ pipelineOptions = options.pipeline
 endTasks = pipelineOptions['end']
 forcedTasks = pipelineOptions['force']
 style = pipelineOptions['style']
+if pipelineOptions['rebuild'] == 'fromstart':
+    rebuildMode = True
+elif pipelineOptions['rebuild'] == 'fromtargets':
+    rebuildMode = False
+else:
+    rebuildMod = True
 if style == 'run':
     # Perform the pipeline steps.
     pipeline_run(endTasks, multiprocess = pipelineOptions['procs'],
-                 logger = black_hole_logger, forcedtorun_tasks = forcedTasks)
+                 logger = black_hole_logger, forcedtorun_tasks = forcedTasks,
+                 gnu_make_maximal_rebuild_mode=rebuildMode)
 elif style == 'flowchart':
     # Draw the pipeline as a diagram.
     pipeline_printout_graph ('flowchart.svg', 'svg', endTasks, no_key_legend = False)
 elif style == 'print':
-   pipeline_printout(sys.stdout, endTasks, verbose = 5, wrap_width=100000, forcedtorun_tasks = forcedTasks)
+   pipeline_printout(sys.stdout, endTasks, verbose = 5, wrap_width=100000,
+                     forcedtorun_tasks = forcedTasks, gnu_make_maximal_rebuild_mode=rebuildMode)

@@ -10,18 +10,20 @@ def usage():
     --style=<run | print | flowchart>
     --force=<force this task to run>
     --end=<final task>
+    --rebuild=<fromtarget | fromstart>
     --verbose=<0 | 1 | 2>""") % sys.argv[0]
 
-longFlags = ["help", "verbose=", "opts=", "style=", "force=", "end="]
+longFlags = ["help", "verbose=", "opts=", "style=", "force=", "end=", "rebuild="]
 shortFlags = "h"
 
 class CmdArgs(object):
     def __init__(self):
-        self.opts = None
-        self.style = None
-        self.verbose = None
-        self.force = None
-        self.end = None
+        self.opts = None    # pipeline options file name
+        self.style = None   # what to do with the pipeline, run it, print it, draw a flowchart
+        self.verbose = None # how much output to produce when the pipeline runs
+        self.force = None   # tasks which are forced to be out of date regardless of timestamps
+        self.end = None     # targets for the pipeline
+        self.rebuild = None  # rebuild outputs by working back from targets or forwards from start points
 
 def get_cmdline_args():
     try:
@@ -43,13 +45,16 @@ def get_cmdline_args():
             if a in ('0','1','2'):
                 args.verbose = int(a)
         elif o == '--force':
-            if args.force is None:
+            if args.force == None:
                 args.force = [a]
             else:
                 args.force.append(a)
         elif o == '--end':
-            if args.end is None:
+            if args.end == None:
                 args.end = [a]
             else:
                 args.end.append(a)
+        elif o == '--rebuild':
+            if a in ('fromtargets', 'fromstart'):
+                args.rebuild = a
     return args
