@@ -10,7 +10,7 @@ def usage():
     --style=<run | print | flowchart>
     --force=<force this task to run>
     --end=<final task>
-    --rebuild=<fromtarget | fromstart>
+    --rebuild=<fromtargets | fromstart>
     --verbose=<0 | 1 | 2>""") % sys.argv[0]
 
 longFlags = ["help", "verbose=", "opts=", "style=", "force=", "end=", "rebuild="]
