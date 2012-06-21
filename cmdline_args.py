@@ -7,19 +7,19 @@ def usage():
     print("""Usage: %s
     [-h | --help]
     --opts=<pipeline options file>
-    --style=<run | print | flowchart>
+    --action=<run | print | flowchart>
     --force=<force this task to run>
     --end=<final task>
     --rebuild=<fromtarget | fromstart>
     --verbose=<0 | 1 | 2>""") % sys.argv[0]
 
-longFlags = ["help", "verbose=", "opts=", "style=", "force=", "end=", "rebuild="]
+longFlags = ["help", "verbose=", "opts=", "action=", "force=", "end=", "rebuild="]
 shortFlags = "h"
 
 class CmdArgs(object):
     def __init__(self):
         self.opts = None    # pipeline options file name
-        self.style = None   # what to do with the pipeline, run it, print it, draw a flowchart
+        self.action = None   # what to do with the pipeline, run it, print it, draw a flowchart
         self.verbose = None # how much output to produce when the pipeline runs
         self.force = None   # tasks which are forced to be out of date regardless of timestamps
         self.end = None     # targets for the pipeline
@@ -36,11 +36,11 @@ def get_cmdline_args():
     for o, a in opts:
         if o == "--opts":
             args.opts = a
-        elif o == "--style":
+        elif o == "--action":
             if a in ("run", "print", "flowchart"):
-                args.style = a
+                args.action = a
             else:
-                exit("Invalid style argument, must be one of: run, print, flowchart.")
+                exit("Invalid action argument, must be one of: run, print, flowchart.")
         elif o in ('-h', '--help'):
             usage()
             sys.exit(0)

@@ -1,7 +1,7 @@
 pipeline = {
    "logDir": "log",
    "logFile": "pipeline.log",
-   "style": "print",
+   "action": "print",
    "procs": 2,
    "verbose": 1,
    "end": ["total"],

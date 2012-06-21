@@ -42,21 +42,21 @@ def total(files, outputs):
 pipelineOptions = options.pipeline
 endTasks = pipelineOptions['end']
 forcedTasks = pipelineOptions['force']
-style = pipelineOptions['style']
+action = pipelineOptions['action']
 if pipelineOptions['rebuild'] == 'fromstart':
     rebuildMode = True
 elif pipelineOptions['rebuild'] == 'fromtargets':
     rebuildMode = False
 else:
     rebuildMod = True
-if style == 'run':
+if action == 'run':
     # Perform the pipeline steps.
     pipeline_run(endTasks, multiprocess = pipelineOptions['procs'],
                  logger = black_hole_logger, forcedtorun_tasks = forcedTasks,
                  gnu_make_maximal_rebuild_mode=rebuildMode)
-elif style == 'flowchart':
+elif action == 'flowchart':
     # Draw the pipeline as a diagram.
     pipeline_printout_graph ('flowchart.svg', 'svg', endTasks, no_key_legend = False)
-elif style == 'print':
+elif action == 'print':
    pipeline_printout(sys.stdout, endTasks, verbose = 5, wrap_width=100000,
                      forcedtorun_tasks = forcedTasks, gnu_make_maximal_rebuild_mode=rebuildMode)

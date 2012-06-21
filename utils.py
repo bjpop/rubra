@@ -35,7 +35,7 @@ stageDefaults = {
 pipeline = {
    'logDir': defaultLogDir,
    'logFile': defaultLogFile,
-   'style': defaultStyle,
+   'action': defaultStyle,
    'procs': defaultProcs,
    'paired': defaultPaired,
    'verbose': 0
@@ -164,8 +164,8 @@ def getOptions(args):
         options = __import__(configModule)
     except ImportError:
         exit('Could not find configuation file: %s' % (configModule + '.py'))
-    if args.style != None:
-        options.pipeline['style'] = args.style
+    if args.action != None:
+        options.pipeline['action'] = args.action
     if args.verbose != None:
         options.pipeline['verbose'] = args.verbose
     if args.force != None:
