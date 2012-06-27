@@ -35,7 +35,7 @@ stageDefaults = {
 pipeline = {
    'logDir': defaultLogDir,
    'logFile': defaultLogFile,
-   'action': defaultStyle,
+   'style': defaultStyle,
    'procs': defaultProcs,
    'paired': defaultPaired,
    'verbose': 0
@@ -172,8 +172,8 @@ def getOptions(args):
         for name in dir(imported):
             if name[:2] != '__':
                 setattr(options, name, getattr(imported, name))
-    if args.action != None:
-        options.pipeline['action'] = args.action
+    if args.style != None:
+        options.pipeline['style'] = args.style
     if args.verbose != None:
         options.pipeline['verbose'] = args.verbose
     if args.force != None:
