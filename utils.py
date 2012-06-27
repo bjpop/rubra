@@ -12,7 +12,7 @@ from cluster_job import (PBS_Script, runJobAndWait)
 import re
 
 # XXX I don't think the defaults really belong here.
-defaultOptionsModule = 'pipeline_config'
+defaultOptionsModule = ['pipeline_config']
 defaultWalltime = None # use the default walltime of the scheduler
 defaultModules = []
 defaultQueue = 'batch'
@@ -158,12 +158,20 @@ def getOptionsModule(args):
     else:
         return defaultOptionsModule
 
+class Bag:
+    pass
+
 def getOptions(args):
-    configModule = getOptionsModule(args)
-    try:
-        options = __import__(configModule)
-    except ImportError:
-        exit('Could not find configuation file: %s' % (configModule + '.py'))
+    configModules = getOptionsModule(args)
+    options = Bag()
+    for module in configModules:
+        try:
+            imported = __import__(module)
+        except ImportError:
+            exit('Could not find configuration file: %s' % (module + '.py'))
+        for name in dir(imported):
+            if name[:2] != '__':
+                setattr(options, name, getattr(imported, name))
     if args.action != None:
         options.pipeline['action'] = args.action
     if args.verbose != None:

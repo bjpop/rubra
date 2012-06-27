@@ -6,7 +6,7 @@ import sys
 def usage():
     print("""Usage: %s
     [-h | --help]
-    --opts=<pipeline options file>
+    --opts=<pipeline options files>
     --action=<run | print | flowchart>
     --force=<force this task to run>
     --end=<final task>
@@ -18,7 +18,7 @@ shortFlags = "h"
 
 class CmdArgs(object):
     def __init__(self):
-        self.opts = None    # pipeline options file name
+        self.opts = None    # pipeline options file names
         self.action = None   # what to do with the pipeline, run it, print it, draw a flowchart
         self.verbose = None # how much output to produce when the pipeline runs
         self.force = None   # tasks which are forced to be out of date regardless of timestamps
@@ -35,7 +35,7 @@ def get_cmdline_args():
     args = CmdArgs()
     for o, a in opts:
         if o == "--opts":
-            args.opts = a
+            args.opts = a.split(',')
         elif o == "--action":
             if a in ("run", "print", "flowchart"):
                 args.action = a
