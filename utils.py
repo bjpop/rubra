@@ -11,6 +11,10 @@ from shell_command import shellCommand
 from cluster_job import (PBS_Script, runJobAndWait)
 import re
 
+# A simple container object
+class Bag:
+    pass
+
 # XXX I don't think the defaults really belong here.
 defaultOptionsModule = ['pipeline_config']
 defaultWalltime = None # use the default walltime of the scheduler
@@ -143,23 +147,11 @@ def splitPath(path):
     (name, ext) = os.path.splitext(base)
     return (prefix, name, ext)
 
-def validateOptions(options):
-    reference = options['reference']
-    if not reference:
-        exit('One reference file must be specified')
-    sequences = options['sequences']
-    if len(sequences) == 0:
-        exit('At least one sequence file must be specified')
-    return options
-
 def getOptionsModule(args):
     if args.opts != None:
         return args.opts
     else:
         return defaultOptionsModule
-
-class Bag:
-    pass
 
 def getOptions(args):
     configModules = getOptionsModule(args)
