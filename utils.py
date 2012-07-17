@@ -2,7 +2,6 @@
 
 import os.path
 import sys
-import yaml
 import subprocess
 from ruffus.proxy_logger import *
 import logging
