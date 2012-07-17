@@ -66,10 +66,7 @@ def runJobAndWait(script, stage, logDir='', verbose=0):
 class PBS_Script(object):
     def __init__(self, command, walltime=None, name=None, memInGB=None, queue='batch', moduleList=None, logDir=None):
         self.command = command
-        if queue in ['batch', 'smp']:
-            self.queue = queue
-        else:
-            self.queue = 'batch'
+        self.queue = queue
         self.name = name
         self.memInGB = memInGB
         self.walltime = walltime
