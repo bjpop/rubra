@@ -59,6 +59,20 @@ def mkDir(dir):
         except IOError, e:
            sys.exit('%s\nFailed to make directory %s' % (e, dir))
 
+def mkLink(source, target):
+    try:
+        os.symlink(source, target)
+    except OSError, e:
+        if e.errno != errno.EEXIST:
+            sys.exit('%s\nFailed to create symlink %s from %s' % (e, target, source))
+            # or just raise?
+
+def mkForceLink(source, target):
+    """Create a symlink, overwriting any existing symlink."""
+    if os.path.isfile(target):
+        os.remove(target)
+    os.symlink(source, target)
+
 def initLog(options):
     logDir = options.pipeline['logDir']
     logFile = os.path.join(logDir, options.pipeline['logFile'])
