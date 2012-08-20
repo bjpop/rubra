@@ -89,7 +89,7 @@ class PBS_Script(object):
         if self.name:
             script.append('#PBS -N %s' % self.name)
         if self.memInGB:
-            if self.queue == 'smp':
+            if self.queue in ['smp', 'terri']:
                 script.append('#PBS -l mem=%sgb' % self.memInGB)
             else:
                 script.append('#PBS -l pvmem=%sgb' % self.memInGB)
