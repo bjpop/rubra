@@ -79,9 +79,11 @@ class PBS_Script(object):
         # XXX fixme
         # should include job id in the output name.
         # should use the proper log directory.
-        script.append('#PBS -q %s' % self.queue)
         if self.queue == 'terri-smp':
+            script.append('#PBS -q terri')
             script.append('#PBS -l procs=8,ppn=8')
+        else:
+            script.append('#PBS -q %s' % self.queue)
         if self.logDir:
            script.append('#PBS -o %s' % self.logDir)
            script.append('#PBS -e %s' % self.logDir)
