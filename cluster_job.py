@@ -80,6 +80,8 @@ class PBS_Script(object):
         # should include job id in the output name.
         # should use the proper log directory.
         script.append('#PBS -q %s' % self.queue)
+        if self.queue == 'terri':
+            script.append('#PBS -l procs=8,ppn=8')
         if self.logDir:
            script.append('#PBS -o %s' % self.logDir)
            script.append('#PBS -e %s' % self.logDir)
@@ -89,8 +91,6 @@ class PBS_Script(object):
         if self.memInGB:
             if self.queue == 'smp':
                 script.append('#PBS -l mem=%sgb' % self.memInGB)
-            elif self.queue == 'terri':
-                script.append('#PBS -l procs=8,ppn=8 pvmem=%sgb' % self.memInGB)
             else:
                 script.append('#PBS -l pvmem=%sgb' % self.memInGB)
         if self.walltime:
