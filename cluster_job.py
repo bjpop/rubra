@@ -89,6 +89,8 @@ class PBS_Script(object):
         if self.memInGB:
             if self.queue == 'smp':
                 script.append('#PBS -l mem=%sgb' % self.memInGB)
+            elif self.queue == 'terri':
+                script.append('#PBS -l procs=8,ppn=8 pvmem=%sgb' % self.memInGB)
             else:
                 script.append('#PBS -l pvmem=%sgb' % self.memInGB)
         if self.walltime:
