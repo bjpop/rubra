@@ -81,7 +81,7 @@ class PBS_Script(object):
         # should use the proper log directory.
         if self.queue == 'terri-smp':
             script.append('#PBS -q terri')
-            script.append('#PBS -l procs=8,ppn=8')
+            script.append('#PBS -l procs=8,tpn=8')
         else:
             script.append('#PBS -q %s' % self.queue)
         if self.logDir:
