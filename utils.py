@@ -2,6 +2,7 @@
 
 import os.path
 import sys
+import errno
 import subprocess
 from ruffus.proxy_logger import *
 import logging
