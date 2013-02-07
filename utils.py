@@ -107,30 +107,30 @@ def distributedCommand(stage, comm, options):
     return runJobAndWait(script, stage, logDir, verbosity)
 
 # check the exit status of the command and if == 0 then write a checkpoint file to indicate success.
-def runStageCheck(stage, flag_file, logger, options, *args):
-    status = runStage(stage, logger, options, *args)
+def runStageCheck(stage, flag_file, *args):
+    status = runStage(stage, *args)
     if status == 0:
         open(flag_file, 'w').close()
     else:
-        command = getCommand(stage, options)
+        command = getCommand(stage, pipeline_options)
         commandStr = command(*args)
         print('Error: command failed: %s' % commandStr)
 
 # returns exit status of the executed command or None
-def runStage(stage, logger, options, *args):
-    command = getCommand(stage, options)
+def runStage(stage, *args):
+    command = getCommand(stage, pipeline_options)
     commandStr = command(*args)
     logStr = stage + ': ' + commandStr
-    logInfo(logStr, logger)
-    if getStageOptions(options, stage, 'distributed'):
-        exitStatus = distributedCommand(stage, commandStr, options)
+    logInfo(logStr, pipeline_logger)
+    if getStageOptions(pipeline_options, stage, 'distributed'):
+        exitStatus = distributedCommand(stage, commandStr, pipeline_options)
         return exitStatus
     else:
         (stdoutStr, stderrStr, exitStatus) = shellCommand(commandStr)
         if exitStatus != 0:
             msg = ("Failed to run '%s'\n%s%sNon-zero exit status %s" %
                    (commandStr, stdoutStr, stderrStr, exitStatus))
-            logInfo(msg, logger)
+            logInfo(msg, pipeline_logger)
         return exitStatus
 
 # This converts a short-hand command string, such as:
@@ -211,3 +211,13 @@ def zeroFile(file):
             f.close()
             # change the time of the file back to what it was
             os.utime(file,(timeInfo.st_atime, timeInfo.st_mtime))
+
+pipeline_logger = None
+def startLogger():
+    global pipeline_logger
+    pipeline_logger = initLog(pipeline_options)
+
+pipeline_options = None
+def setOptions(options):
+    global pipeline_options
+    pipeline_options = options

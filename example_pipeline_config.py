@@ -4,7 +4,7 @@ pipeline = {
    "style": "print",
    "procs": 2,
    "verbose": 1,
-   "end": ["total"],
+   "end": ["example_pipeline.total"],
    "force": [],
    "rebuild" : "fromstart"
 }
