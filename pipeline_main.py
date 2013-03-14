@@ -36,7 +36,7 @@ def main():
     elif pipelineOptions['rebuild'] == 'fromtargets':
         rebuildMode = False
     else:
-        rebuildMod = True
+        rebuildMode = True
     if style == 'run':
         # Perform the pipeline steps (run the pipeline).
         pipeline_run(
