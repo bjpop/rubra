@@ -171,6 +171,12 @@ def getOptions(args):
     configModules = getOptionsModule(args)
     options = Bag()
     for module in configModules:
+        # Check if the config module name ends in a .py suffix, if
+        # so drop the suffix because Python module imports do not
+        # allow it.
+        (prefix, suffix) = os.path.splitext(module)
+        if suffix == '.py':
+            module = prefix
         try:
             imported = __import__(module)
         except ImportError:
