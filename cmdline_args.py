@@ -7,7 +7,7 @@ def get_cmdline_args():
     return parser.parse_args()
 
 parser = argparse.ArgumentParser(
-    description='A bioniformatics pipeline system.')
+    description='A bioinformatics pipeline system.')
 
 parser.add_argument(
     '--pipeline',
