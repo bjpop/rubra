@@ -15,17 +15,19 @@ from ruffus import *
 from utils import (runStageCheck)
 
 # the input files
-data_files = ['test_data/data1.txt', 'test_data/data2.txt']
+data_files = ['test/data1.txt', 'test/data2.txt']
+
 
 # count the number of lines in a file
 @transform(data_files, suffix('.txt'), ['.count', '.count.Success'])
 def countLines(file, outputs):
-    output,flagFile = outputs
+    output, flagFile = outputs
     runStageCheck('countLines', flagFile, file, output)
 
+
 # sum the counts from the previous stage
-@merge(countLines,  ['test_data/total.txt', 'test_data/total.Success'])
+@merge(countLines, ['test/total.txt', 'test/total.Success'])
 def total(files, outputs):
     files = ' '.join(map(lambda pair: pair[0], files))
-    output,flagFile = outputs
+    output, flagFile = outputs
     runStageCheck('total', flagFile, files, output)

@@ -1,67 +1,59 @@
 # Process the unix command line of the pipeline.
 
-import getopt
-import sys
+import argparse
 
-def usage():
-    print("""Usage: %s
-    [-h | --help]
-    --opts=<pipeline options files>
-    --style=<run | print | flowchart>
-    --force=<force this task to run>
-    --end=<final task>
-    --rebuild=<fromtarget | fromstart>
-    --verbose=<0 | 1 | 2>""") % sys.argv[0]
-
-longFlags = ["help", "verbose=", "opts=", "style=", "force=", "end=", "rebuild="]
-shortFlags = "h"
-
-class CmdArgs(object):
-    def __init__(self):
-        self.opts = None    # pipeline options file names
-        self.style = None   # what to do with the pipeline, run it, print it, draw a flowchart
-        self.verbose = None # how much output to produce when the pipeline runs
-        self.force = None   # tasks which are forced to be out of date regardless of timestamps
-        self.end = None     # targets for the pipeline
-        self.rebuild = None  # rebuild outputs by working back from targets or forwards from start points
 
 def get_cmdline_args():
-    try:
-        opts, args = getopt.getopt(sys.argv[1:], shortFlags, longFlags)
-    except getopt.GetoptError, err:
-        print str(err)
-        usage()
-        sys.exit(2)
-    args = CmdArgs()
-    for o, a in opts:
-        if o == "--opts":
-            args.opts = a.split(',')
-        elif o == "--style":
-            if a in ("run", "print", "flowchart"):
-                args.style = a
-            else:
-                exit("Invalid style argument, must be one of: run, print, flowchart.")
-        elif o in ('-h', '--help'):
-            usage()
-            sys.exit(0)
-        elif o == '--verbose':
-            if a in ('0','1','2'):
-                args.verbose = int(a)
-            else:
-                exit("Invalid verbose level, must be one of: 0, 1, 2.")
-        elif o == '--force':
-            if args.force == None:
-                args.force = [a]
-            else:
-                args.force.append(a)
-        elif o == '--end':
-            if args.end == None:
-                args.end = [a]
-            else:
-                args.end.append(a)
-        elif o == '--rebuild':
-            if a in ('fromtargets', 'fromstart'):
-                args.rebuild = a
-            else:
-                exit("Invalid rebuild argument, must be one of: fromtargets, fromstart.")
-    return args
+    return parser.parse_args()
+
+parser = argparse.ArgumentParser(
+    description='A bioniformatics pipeline system.')
+
+parser.add_argument(
+    '--pipeline',
+    metavar='PIPELINE_FILE',
+    type=str,
+    help='Your Ruffus pipeline stages (a Python module)')
+parser.add_argument(
+    '--config',
+    metavar='CONFIG_FILE',
+    type=str,
+    nargs='+',
+    required=True,
+    help='One or more configuration files (Python modules)')
+parser.add_argument(
+    '--verbose',
+    type=int,
+    choices=(0, 1, 2),
+    required=False,
+    default=1,
+    help='Output verbosity level: 0 = quiet; 1 = normal; \
+          2 = chatty (default is 1)')
+parser.add_argument(
+    '--style',
+    type=str,
+    choices=('print', 'run', 'flowchart'),
+    required=False,
+    default='print',
+    help='Pipeline behaviour: print; run; flowchart (default is print)')
+parser.add_argument(
+    '--force',
+    metavar='TASKNAME',
+    type=str,
+    required=False,
+    default=[],
+    help='tasks which are forced to be out of date regardless of timestamps')
+parser.add_argument(
+    '--end',
+    metavar='TASKNAME',
+    type=str,
+    required=False,
+    help='end points (tasks) for the pipeline')
+parser.add_argument(
+    '--rebuild',
+    type=str,
+    choices=('fromstart', 'fromend'),
+    required=False,
+    default='fromstart',
+    help='rebuild outputs by working back from end tasks or forwards \
+          from start tasks (default is fromend)')
