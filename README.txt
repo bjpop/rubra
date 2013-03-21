@@ -58,7 +58,7 @@ test/data2.txt), and then sums the results together.
    ./rubra.py --pipeline example_pipeline.py --config example_config.py --style run
 
 There are 2 lines in the first file and 1 line in the second file. So the
-result is three, which is written to the output file test/total.txt.
+result is 3, which is written to the output file test/total.txt.
 
 The --pipeline argument is a Python script which contains the actual
 code for each pipeline stage (using Ruffus notation). The --config
