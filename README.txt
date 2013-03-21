@@ -3,6 +3,11 @@ Rubra: a bioinformatics pipeline.
 
 https://github.com/bjpop/rubra
 
+License:
+--------
+
+Rubra is licensed under the MIT license. See LICENSE.txt.
+
 Description:
 ------------
 
@@ -15,9 +20,6 @@ Authors:
 
 Bernie Pope, Clare Sloggett, Gayle Philip.
 
-Licence:
---------
-
 Usage:
 ------
 
@@ -26,7 +28,7 @@ usage: rubra.py [-h] [--pipeline PIPELINE_FILE] --config CONFIG_FILE
                 [--style {print,run,flowchart}] [--force TASKNAME]
                 [--end TASKNAME] [--rebuild {fromstart,fromend}]
 
-A bioniformatics pipeline system.
+A bioinformatics pipeline system.
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -50,17 +52,58 @@ Example:
 --------
 
 Below is a little example pipeline which you can find in the Rubra source
-tree. It counts the number of lines in two files (potentially in parallel,
-and then sums the results together). The input files are in the test
-subdirectory.
+tree. It counts the number of lines in two files (test/data1.txt and
+test/data2.txt), and then sums the results together.
 
    ./rubra.py --pipeline example_pipeline.py --config example_config.py --style run
 
-The final result is written to the file test/total.txt
+There are 2 lines in the first file and 1 line in the second file. So the
+result is three, which is written to the output file test/total.txt.
+
+The --pipeline argument is a Python script which contains the actual
+code for each pipeline stage (using Ruffus notation). The --config
+argument is a Python script which contains configuration options for the
+whole pipeline, plus options for each stage (including the shell command
+to run in the stage). The --style argument says what to do with the pipeline:
+"run" means "perform the out-of-date steps in the pipeline". The default
+style is "print" which just displays what the pipeline would do if it were
+run. You can get a diagram of the pipeline using the "flowchart" style.
 
 Configuration:
 --------------
 
+Configuration options are written into one or more Python scripts, which
+are passed to Rubra via the --config command line argument.
+
+Some options are required, and some are, well, optional.
+
 Options for the whole pipeline:
+-------------------------------
+
+    pipeline = {
+        "logDir": "log",
+        "logFile": "pipeline.log",
+        "procs": 2,
+        "end": ["total"],
+    }
+
 
 Options for each stage of the pipeline:
+---------------------------------------
+
+    stageDefaults = {
+        "distributed": False,
+        "walltime": "00:10:00",
+        "memInGB": 1,
+        "queue": "batch",
+        "modules": ["python-gcc"]
+    }
+
+    stages = {
+        "countLines": {
+            "command": "wc -l %file > %out",
+        },
+        "total": {
+            "command": "./test/total.py %files > %out",
+        },
+    }
