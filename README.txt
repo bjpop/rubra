@@ -18,7 +18,7 @@ for running pipeline stages on a distributed compute cluster.
 Authors:
 --------
 
-Bernie Pope, Clare Sloggett, Gayle Philip.
+Bernie Pope, Clare Sloggett, Gayle Philip, Matthew Wakefield
 
 Usage:
 ------
