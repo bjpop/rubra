@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from distutils.core import setup
+from setuptools import setup
 
 setup(
     name='Rubra',
@@ -9,6 +9,9 @@ setup(
     author_email='bjpope@unimelb.edu.au',
     packages=['rubra'],
     package_data={'rubra': ['examples/*.py']},
+    entry_points={
+        'console_scripts': ['rubra = rubra.rubra:main']
+    },
     url='https://github.com/bjpop/rubra',
     license='LICENSE.txt',
     description='Rubra is a pipeline system for bioinformatics workflows\
