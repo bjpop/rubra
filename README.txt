@@ -23,9 +23,9 @@ Bernie Pope, Clare Sloggett, Gayle Philip, Matthew Wakefield
 Usage:
 ------
 
-usage: rubra.py [-h] [--pipeline PIPELINE_FILE] --config CONFIG_FILE
+usage: rubra [-h] [--pipeline PIPELINE_FILE] --config CONFIG_FILE
                 [CONFIG_FILE ...] [--verbose {0,1,2}]
-                [--style {print,run,flowchart}] [--force TASKNAME]
+                [--style {print,run,touchfiles,flowchart}] [--force TASKNAME]
                 [--end TASKNAME] [--rebuild {fromstart,fromend}]
 
 A bioinformatics pipeline system.
@@ -38,8 +38,8 @@ optional arguments:
                         One or more configuration files (Python modules)
   --verbose {0,1,2}     Output verbosity level: 0 = quiet; 1 = normal; 2 =
                         chatty (default is 1)
-  --style {print,run,flowchart}
-                        Pipeline behaviour: print; run; flowchart (default is
+  --style {print,run,touchfiles,flowchart}
+                        Pipeline behaviour: print; run; touchfiles; flowchart (default is
                         print)
   --force TASKNAME      tasks which are forced to be out of date regardless of
                         timestamps
@@ -55,7 +55,7 @@ Below is a little example pipeline which you can find in the Rubra source
 tree. It counts the number of lines in two files (test/data1.txt and
 test/data2.txt), and then sums the results together.
 
-   ./rubra.py --pipeline example_pipeline.py --config example_config.py --style run
+   rubra --pipeline example_pipeline.py --config example_config.py --style run
 
 There are 2 lines in the first file and 1 line in the second file. So the
 result is 3, which is written to the output file test/total.txt.
@@ -67,7 +67,9 @@ whole pipeline, plus options for each stage (including the shell command
 to run in the stage). The --style argument says what to do with the pipeline:
 "run" means "perform the out-of-date steps in the pipeline". The default
 style is "print" which just displays what the pipeline would do if it were
-run. You can get a diagram of the pipeline using the "flowchart" style.
+run. You can get a diagram of the pipeline using the "flowchart" style. You 
+can touch all files in order using the "touchfiles" style, which is mostly 
+useful for forcing Ruffus to acknowledge that a set of steps is up to date.
 
 Configuration:
 --------------

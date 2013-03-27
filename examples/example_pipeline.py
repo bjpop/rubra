@@ -12,7 +12,7 @@ them up.
 '''
 
 from ruffus import *
-from utils import (runStageCheck)
+from rubra.utils import (runStageCheck)
 
 # the input files
 data_files = ['test/data1.txt', 'test/data2.txt']

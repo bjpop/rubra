@@ -1,12 +1,13 @@
 # Various useful utilities for the pipeline.
 
-import os.path
 import sys
 import errno
 import subprocess
 from ruffus.proxy_logger import *
 import logging
+import imp
 import os
+import os.path
 from shell_command import shellCommand
 from cluster_job import PBS_Script
 import re
@@ -196,15 +197,15 @@ def getOptions(args):
     options = Bag()
     options.pipeline = {}
 
-    for module in args.config:
+    for module_file in args.config:
         # Check if the config module name ends in a .py suffix, if
         # so drop the suffix because Python module imports do not
-        # allow it.
-        module = drop_py_suffix(module)
+        # allow it. XXX is this still necessary?
+        module = drop_py_suffix(module_file)
         try:
-            imported = __import__(module)
+            imported = imp.load_source(module, module_file)
         except ImportError:
-            exit('Could not find configuration file: %s' % (module + '.py'))
+            exit('Could not find configuration file: %s' % module_file)
         for name in dir(imported):
             if name[:2] != '__':
                 setattr(options, name, getattr(imported, name))

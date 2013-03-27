@@ -32,10 +32,10 @@ parser.add_argument(
 parser.add_argument(
     '--style',
     type=str,
-    choices=('print', 'run', 'flowchart'),
+    choices=('print', 'run', 'flowchart', 'touchfiles'),
     required=False,
     default='print',
-    help='Pipeline behaviour: print; run; flowchart (default is print)')
+    help='Pipeline behaviour: print; run; touchfiles; flowchart (default is print)')
 parser.add_argument(
     '--force',
     metavar='TASKNAME',
