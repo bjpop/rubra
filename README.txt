@@ -39,7 +39,7 @@ optional arguments:
   --verbose {0,1,2}     Output verbosity level: 0 = quiet; 1 = normal; 2 =
                         chatty (default is 1)
   --style {print,run,touchfiles,flowchart}
-                        Pipeline behaviour: print; run; flowchart (default is
+                        Pipeline behaviour: print; run; touchfiles; flowchart (default is
                         print)
   --force TASKNAME      tasks which are forced to be out of date regardless of
                         timestamps
