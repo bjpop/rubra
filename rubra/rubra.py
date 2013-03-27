@@ -38,7 +38,8 @@ def main():
         rebuildMode = False
     else:
         rebuildMode = True
-    if style == 'run':
+    if style in ['run', 'touchfiles']:
+        touchfiles_flag = (style=='touchfiles')
         # Perform the pipeline steps (run the pipeline).
         pipeline_run(
             # End points of the pipeline.
@@ -46,9 +47,12 @@ def main():
             # How many ruffus tasks to run.
             multiprocess=pipelineOptions['procs'],
             logger=black_hole_logger,
-            # Force the pipeline to start from here, regarless of whether the
+            # Force the pipeline to start from here, regardless of whether the
             # stage is up-to-date or not.
             forcedtorun_tasks=forcedTasks,
+            # If the style was touchfiles, we will set a flag to bring 
+            # files up to date without running anything
+            touch_files_only=touchfiles_flag,
             # Choose the mode in which ruffus decides how much work needs to be
             # done.
             gnu_make_maximal_rebuild_mode=rebuildMode)
