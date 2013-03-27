@@ -1,4 +1,4 @@
-#!/bin/env python
+#!/usr/bin/env python
 
 '''
 Authors: Bernie Pope, Gayle Philip, Clare Sloggett
