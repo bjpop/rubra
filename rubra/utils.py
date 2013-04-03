@@ -9,7 +9,7 @@ import imp
 import os
 import os.path
 from shell_command import shellCommand
-from cluster_job import (PBS_Script, runJobAndWait)
+from cluster_job import PBS_Script
 import re
 
 
@@ -115,7 +115,7 @@ def distributedCommand(stage, comm, options):
     verbosity = options.pipeline['verbose']
     script = PBS_Script(command=comm, walltime=time, name=stage, memInGB=mem,
                         queue=queue, moduleList=mods, logDir=logDir)
-    return runJobAndWait(script, stage, logDir, verbosity)
+    return script.runJobAndWait(stage, logDir, verbosity)
 
 
 # check the exit status of the command and if == 0 then write a checkpoint
