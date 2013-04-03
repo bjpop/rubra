@@ -10,6 +10,7 @@ the ruffus functions to either run, print or graph the pipeline.
 '''
 
 import sys
+import imp
 from ruffus import (pipeline_run, pipeline_printout, pipeline_printout_graph,
                     black_hole_logger)
 from utils import (getOptions, setOptions, startLogger, drop_py_suffix)
@@ -24,7 +25,7 @@ def main():
 
     # import the pipeline so its stages are defined
     # the name of the pipeline is given on the command line
-    __import__(drop_py_suffix(args.pipeline))
+    imp.load_source(drop_py_suffix(args.pipeline), args.pipeline)
 
     logDir = options.pipeline['logDir']
     startLogger()
