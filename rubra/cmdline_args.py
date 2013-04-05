@@ -1,7 +1,7 @@
 # Process the unix command line of the pipeline.
 
 import argparse
-
+from version import rubra_version
 
 def get_cmdline_args():
     return parser.parse_args()
@@ -57,3 +57,5 @@ parser.add_argument(
     default='fromstart',
     help='rebuild outputs by working back from end tasks or forwards \
           from start tasks (default is fromend)')
+parser.add_argument(
+    '--version', action='version', version='%(prog)s ' + rubra_version)
