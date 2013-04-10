@@ -84,7 +84,7 @@ class PBS_Script(Runnable_Script):
         self.moduleList = moduleList
         self.logDir = logDir
         #Runnable_Script.__init__(**kw)
-        super().__init__()
+        super(PBS_Script, self).__init__()
         #self.Runnable_Script.__init__(**kw)
         pass
 
