@@ -83,7 +83,9 @@ class PBS_Script(Runnable_Script):
         self.walltime = walltime
         self.moduleList = moduleList
         self.logDir = logDir
-        self.Runnable_Script.__init__(**kw)
+        #Runnable_Script.__init__(**kw)
+        super().__init__()
+        #self.Runnable_Script.__init__(**kw)
         pass
 
     # render the job script as a string.
