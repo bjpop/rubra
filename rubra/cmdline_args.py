@@ -56,6 +56,6 @@ parser.add_argument(
     required=False,
     default='fromstart',
     help='rebuild outputs by working back from end tasks or forwards \
-          from start tasks (default is fromend)')
+          from start tasks (default is fromstart)')
 parser.add_argument(
     '--version', action='version', version='%(prog)s ' + rubra_version)

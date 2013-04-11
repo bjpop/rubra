@@ -46,7 +46,7 @@ optional arguments:
   --end TASKNAME        end points (tasks) for the pipeline
   --rebuild {fromstart,fromend}
                         rebuild outputs by working back from end tasks or
-                        forwards from start tasks (default is fromend)
+                        forwards from start tasks (default is fromstart)
 
 Example:
 --------
