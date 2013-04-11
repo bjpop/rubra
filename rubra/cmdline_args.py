@@ -42,6 +42,7 @@ parser.add_argument(
     type=str,
     required=False,
     default=[],
+    nargs='+',
     help='tasks which are forced to be out of date regardless of timestamps')
 parser.add_argument(
     '--end',
