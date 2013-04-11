@@ -97,7 +97,7 @@ def initLog(options):
     return {'proxy': proxy, 'mutex': mutex}
 
 
-# Look for a particular option in a stage, otherwise return the result
+# Look for a particular option in a stage, otherwise return the default 
 def getStageOptions(options, stage, optionName):
     try:
         return options.stages[stage][optionName]
@@ -111,10 +111,14 @@ def distributedCommand(stage, comm, options):
     mods = getStageOptions(options, stage, 'modules')
     queue = getStageOptions(options, stage, 'queue')
     mem = getStageOptions(options, stage, 'memInGB')
+    try:
+        literals = getStageOptions(options, stage, 'jobscript')
+    except KeyError:
+        literals = None
     logDir = options.pipeline['logDir']
     verbosity = options.pipeline['verbose']
     script = PBS_Script(command=comm, walltime=time, name=stage, memInGB=mem,
-                        queue=queue, moduleList=mods, logDir=logDir)
+                        queue=queue, moduleList=mods, logDir=logDir, literals=literals)
     return script.runJobAndWait(stage, logDir, verbosity)
 
 

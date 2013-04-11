@@ -75,7 +75,7 @@ class Runnable_Script(object):
 # Generate a PBS script for a job.
 class PBS_Script(Runnable_Script):
     def __init__(self, command, walltime=None, name=None, memInGB=None,
-                 queue='batch', moduleList=None, logDir=None, **kw):
+                 queue='batch', moduleList=None, logDir=None, literals=None, **kw):
         self.command = command
         self.queue = queue
         self.name = name
@@ -83,6 +83,7 @@ class PBS_Script(Runnable_Script):
         self.walltime = walltime
         self.moduleList = moduleList
         self.logDir = logDir
+        self.literals = literals
         super(PBS_Script, self).__init__()
         pass
 
@@ -110,6 +111,10 @@ class PBS_Script(Runnable_Script):
                 script.append('#PBS -l pvmem=%sgb' % self.memInGB)
         if self.walltime:
             script.append('#PBS -l walltime=%s' % self.walltime)
+        # copy the literal text verbatim into the end of the PBS options
+        # section.
+        if self.literals:
+            script.append(self.literals)
         if type(self.moduleList) == list and len(self.moduleList) > 0:
             for item in self.moduleList:
                 script.append('module load %s' % item)
