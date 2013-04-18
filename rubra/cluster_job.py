@@ -7,7 +7,6 @@ from time import sleep
 from tempfile import NamedTemporaryFile
 import os
 
-
 # this assumes that qstat info for a job will stick around for a while after
 # the job has finished.
 
@@ -75,16 +74,17 @@ class Runnable_Script(object):
 # Generate a PBS script for a job.
 class PBS_Script(Runnable_Script):
     def __init__(self, command, walltime=None, name=None, memInGB=None,
-                 queue='batch', moduleList=None, logDir=None, literals=None, **kw):
+                 queue='batch', smp='None', moduleList=None, logDir=None, literals=None, **kw):
         self.command = command
         self.queue = queue
+        self.smp = smp
         self.name = name
         self.memInGB = memInGB
         self.walltime = walltime
         self.moduleList = moduleList
         self.logDir = logDir
         self.literals = literals
-        super(PBS_Script, self).__init__()
+        super(PBS_Script, self).__init__(**kw)
         pass
 
     # render the job script as a string.
@@ -93,11 +93,9 @@ class PBS_Script(Runnable_Script):
         # XXX fixme
         # should include job id in the output name.
         # should use the proper log directory.
-        if self.queue == 'terri-smp':
-            script.append('#PBS -q terri')
+        script.append('#PBS -q %s' % self.queue)
+        if self.smp:
             script.append('#PBS -l procs=8,tpn=8')
-        else:
-            script.append('#PBS -q %s' % self.queue)
         if self.logDir:
             script.append('#PBS -o %s' % self.logDir)
             script.append('#PBS -e %s' % self.logDir)
@@ -105,7 +103,7 @@ class PBS_Script(Runnable_Script):
         if self.name:
             script.append('#PBS -N %s' % self.name)
         if self.memInGB:
-            if self.queue in ['smp', 'terri-smp']:
+            if self.smp:
                 script.append('#PBS -l mem=%sgb' % self.memInGB)
             else:
                 script.append('#PBS -l pvmem=%sgb' % self.memInGB)
@@ -115,6 +113,9 @@ class PBS_Script(Runnable_Script):
         # section.
         if self.literals:
             script.append(self.literals)
+        # TODO This will silently fail. Should raise a warning
+        # that arguments were specified and not set?
+
         if type(self.moduleList) == list and len(self.moduleList) > 0:
             for item in self.moduleList:
                 script.append('module load %s' % item)

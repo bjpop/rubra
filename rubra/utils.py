@@ -22,6 +22,7 @@ defaultOptionsModule = ['pipeline_config']
 defaultWalltime = None  # use the default walltime of the scheduler
 defaultModules = []
 defaultQueue = 'batch'
+defaultSmp = None # none suppresses queueing software flag
 defaultMemInGB = None  # use the default mem of the scheduler
 defaultDistributed = False
 defaultLogDir = 'log'
@@ -35,7 +36,8 @@ stageDefaults = {
     'walltime': defaultWalltime,
     'memInGB': defaultMemInGB,
     'modules': defaultModules,
-    'queue': defaultQueue
+    'queue': defaultQueue,
+    'smp': defaultSmp,
 }
 
 pipeline = {
@@ -102,8 +104,12 @@ def getStageOptions(options, stage, optionName):
     try:
         return options.stages[stage][optionName]
     except KeyError:
-        return options.stageDefaults[optionName]
-
+        try:
+            # this will come from the config file
+            return options.stageDefaults[optionName]
+        except KeyError:
+            # this is defined in this module
+            stageDefaults[optionName]
 
 # returns the exit status of the job if possible otherwise None
 def distributedCommand(stage, comm, options):
@@ -115,10 +121,12 @@ def distributedCommand(stage, comm, options):
         literals = getStageOptions(options, stage, 'jobscript')
     except KeyError:
         literals = None
+    smp = getStageOptions(options, stage, 'smp')
     logDir = options.pipeline['logDir']
     verbosity = options.pipeline['verbose']
     script = PBS_Script(command=comm, walltime=time, name=stage, memInGB=mem,
-                        queue=queue, moduleList=mods, logDir=logDir, literals=literals)
+                        queue=queue, smp=smp, moduleList=mods, logDir=logDir,
+                        literals=literals)
     return script.runJobAndWait(stage, logDir, verbosity)
 
 
