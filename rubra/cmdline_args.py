@@ -10,7 +10,7 @@ parser = argparse.ArgumentParser(
     description='A bioinformatics pipeline system.')
 
 parser.add_argument(
-    '--pipeline',
+    'pipeline',
     metavar='PIPELINE_FILE',
     type=str,
     help='Your Ruffus pipeline stages (a Python module)')
