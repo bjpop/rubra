@@ -23,7 +23,7 @@ Bernie Pope, Clare Sloggett, Gayle Philip, Matthew Wakefield
 Usage:
 ------
 
-usage: rubra [-h] [--pipeline PIPELINE_FILE] --config CONFIG_FILE
+usage: rubra [-h] PIPELINE_FILE --config CONFIG_FILE
                 [CONFIG_FILE ...] [--verbose {0,1,2}]
                 [--style {print,run,touchfiles,flowchart}] [--force TASKNAME]
                 [--end TASKNAME] [--rebuild {fromstart,fromend}]
@@ -32,8 +32,7 @@ A bioinformatics pipeline system.
 
 optional arguments:
   -h, --help            show this help message and exit
-  --pipeline PIPELINE_FILE
-                        Your Ruffus pipeline stages (a Python module)
+  PIPELINE_FILE         Your Ruffus pipeline stages (a Python module)
   --config CONFIG_FILE [CONFIG_FILE ...]
                         One or more configuration files (Python modules)
   --verbose {0,1,2}     Output verbosity level: 0 = quiet; 1 = normal; 2 =
