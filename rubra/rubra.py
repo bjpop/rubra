@@ -10,7 +10,7 @@ the ruffus functions to either run, print or graph the pipeline.
 '''
 
 import sys
-import imp
+import os
 from ruffus import (pipeline_run, pipeline_printout, pipeline_printout_graph,
                     black_hole_logger)
 from utils import (getOptions, setOptions, startLogger, drop_py_suffix)
@@ -18,14 +18,21 @@ from cmdline_args import get_cmdline_args
 
 
 def main():
-    # options must be set first
+
     args = get_cmdline_args()
+
+    # We want to look for modules in the directory local to the pipeline,
+    # just as if the pipeline script had been called directly.
+    # This includes the script itself and the config files imported by getOptions
+    sys.path.insert(0, os.path.dirname(args.pipeline))
+
+    # options must be set before pipeline is imported
     options = getOptions(args)
     setOptions(options)
 
     # import the pipeline so its stages are defined
     # the name of the pipeline is given on the command line
-    imp.load_source(drop_py_suffix(args.pipeline), args.pipeline)
+    __import__(drop_py_suffix(args.pipeline))
 
     logDir = options.pipeline['logDir']
     startLogger()

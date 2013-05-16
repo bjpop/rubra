@@ -207,7 +207,7 @@ def getOptions(args):
         # allow it. XXX is this still necessary?
         module = drop_py_suffix(module_file)
         try:
-            imported = imp.load_source(module, module_file)
+            imported = __import__(module)
         except ImportError:
             exit('Could not find configuration file: %s' % module_file)
         for name in dir(imported):
