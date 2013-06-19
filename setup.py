@@ -4,7 +4,7 @@ from setuptools import setup
 
 setup(
     name='Rubra',
-    version='0.1.4',
+    version='0.1.5',
     author='Bernie Pope',
     author_email='bjpope@unimelb.edu.au',
     packages=['rubra'],
