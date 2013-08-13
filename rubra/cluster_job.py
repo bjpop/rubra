@@ -137,6 +137,18 @@ class PBS_Script(Runnable_Script):
             raise(Exception('qsub command failed with exit status: ' +
                   str(returnCode)))
 
+class SLURM_Job(object):
+    def __init__(self, command, walltime=None, name=None, memInGB=None,
+        moduleList=None, logDir=None, literals=None, **kw):
+
+        self.srun_command = "srun {}".format(command)
+
+    def run_job_and_wait(self):
+        print("running {}".format(self.srun_command))
+        (stdout, stderr, returnCode) = shellCommand(self.srun_command)
+        print("return code = {}".format(self.srun_command))
+        return returnCode
+
 #class SGE_Script(Runnable_Script):
 #    def __init__(self, command, walltime=None, name=None, memInGB=None,
 #                 queue='batch', moduleList=None, logDir=None, **kw):

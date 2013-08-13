@@ -9,7 +9,8 @@ import imp
 import os
 import os.path
 from shell_command import shellCommand
-from cluster_job import PBS_Script
+#from cluster_job import PBS_Script
+from cluster_job import SLURM_Job 
 import re
 
 
@@ -117,9 +118,11 @@ def distributedCommand(stage, comm, options):
         literals = None
     logDir = options.pipeline['logDir']
     verbosity = options.pipeline['verbose']
-    script = PBS_Script(command=comm, walltime=time, name=stage, memInGB=mem,
-                        queue=queue, moduleList=mods, logDir=logDir, literals=literals)
-    return script.runJobAndWait(stage, logDir, verbosity)
+    #script = PBS_Script(command=comm, walltime=time, name=stage, memInGB=mem,
+    #                    queue=queue, moduleList=mods, logDir=logDir, literals=literals)
+    #return script.runJobAndWait(stage, logDir, verbosity)
+    job_command = SLURM_Job(command=comm)
+    return job_command.run_job_and_wait()
 
 
 # check the exit status of the command and if == 0 then write a checkpoint
