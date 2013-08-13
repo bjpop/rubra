@@ -121,8 +121,9 @@ def distributedCommand(stage, comm, options):
     #script = PBS_Script(command=comm, walltime=time, name=stage, memInGB=mem,
     #                    queue=queue, moduleList=mods, logDir=logDir, literals=literals)
     #return script.runJobAndWait(stage, logDir, verbosity)
-    job_command = SLURM_Job(command=comm)
-    return job_command.run_job_and_wait()
+    job_command = SLURM_Job(command=comm, walltime=time, name=stage, memInGB=mem,
+                            queue=queue, moduleList=mods, logDir=logDir)
+    return job_command.run_job_and_wait(stage, verbosity)
 
 
 # check the exit status of the command and if == 0 then write a checkpoint

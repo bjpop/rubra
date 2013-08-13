@@ -137,16 +137,45 @@ class PBS_Script(Runnable_Script):
             raise(Exception('qsub command failed with exit status: ' +
                   str(returnCode)))
 
+
 class SLURM_Job(object):
     def __init__(self, command, walltime=None, name=None, memInGB=None,
-        moduleList=None, logDir=None, literals=None, **kw):
+        queue=None, moduleList=None, logDir=None, **kw):
+        def is_int_str(x):
+            return type(x) == str and x.isdigit()
+        self.command = command
+        self.walltime = '--time=' + walltime if walltime is not None else ''
+        self.name = '--job-name=' + name if name is not None else ''
+        self.memInGB = '--mem=' + str(int(memInGB) * 1024) if is_int_str(memInGB) else ''
+        self.moduleList = moduleList
+        self.logDir = logDir if logDir is not None else ''
+        self.queue = '--exclusive' if queue is not None else ''
 
-        self.srun_command = "srun {}".format(command)
+    def __str__(self):
+        script = ['#!/bin/bash']
+        if type(self.moduleList) == list and len(self.moduleList) > 0:
+            for item in self.moduleList:
+                script.append('module load %s' % item)
+        script.append(self.command)
+        return '\n'.join(script) + '\n'
 
-    def run_job_and_wait(self):
-        print("running {}".format(self.srun_command))
-        (stdout, stderr, returnCode) = shellCommand(self.srun_command)
-        print("return code = {}".format(self.srun_command))
+    def run_job_and_wait(self, stage, verbose=0):
+        logFilename = os.path.join(self.logDir, stage + '.sh')
+        file = NamedTemporaryFile(dir='')
+        file.write(str(self))
+        file.flush()
+        stderr_file = os.path.join(self.logDir, stage + '.%j.stderr')
+        stdout_file = os.path.join(self.logDir, stage + '.%j.stdout')
+        command = 'srun --error={} --output={} {} {} {} bash {}'.format(
+            stderr_file, stdout_file,
+            self.queue, self.name, self.walltime, file.name)
+        with open(logFilename, 'w') as logFile:
+            logFile.write(self.__str__())
+            logFile.write('\n# ' + command + '\n')
+        if verbose > 0:
+            print('stage = ' + stage)
+        (stdout, stderr, returnCode) = shellCommand(command)
+        file.close()
         return returnCode
 
 #class SGE_Script(Runnable_Script):
