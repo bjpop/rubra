@@ -140,7 +140,7 @@ class PBS_Script(Runnable_Script):
 
 class SLURM_Job(object):
     def __init__(self, command, walltime=None, name=None, memInGB=None,
-        queue=None, moduleList=None, logDir=None, **kw):
+        queue=None, moduleList=None, logDir=None, literals=None, **kw):
         def is_int_str(x):
             return type(x) == str and x.isdigit()
         self.command = command
@@ -150,6 +150,7 @@ class SLURM_Job(object):
         self.moduleList = moduleList
         self.logDir = logDir if logDir is not None else ''
         self.queue = '--exclusive' if queue is not None else ''
+        self.literals = literals if literals is not None else ''
 
     def __str__(self):
         script = ['#!/bin/bash']
@@ -166,9 +167,9 @@ class SLURM_Job(object):
         file.flush()
         stderr_file = os.path.join(self.logDir, stage + '.%j.stderr')
         stdout_file = os.path.join(self.logDir, stage + '.%j.stdout')
-        command = 'srun --error={} --output={} {} {} {} bash {}'.format(
+        command = 'srun --error={} --output={} {} {} {} {} bash {}'.format(
             stderr_file, stdout_file,
-            self.queue, self.name, self.walltime, file.name)
+            self.literals, self.queue, self.name, self.walltime, file.name)
         with open(logFilename, 'w') as logFile:
             logFile.write(self.__str__())
             logFile.write('\n# ' + command + '\n')
@@ -190,4 +191,3 @@ class SLURM_Job(object):
 #        self.logDir = logDir
 #        self.Runnable_Script.__init__(**kw)
 #        pass
-
