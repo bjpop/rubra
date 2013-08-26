@@ -146,7 +146,8 @@ class SLURM_Job(object):
         self.command = command
         self.walltime = '--time=' + walltime if walltime is not None else ''
         self.name = '--job-name=' + name if name is not None else ''
-        self.mem = '--mem=' + str(int(memInGB) * 1024) if is_int_str(memInGB) else ''
+        # XXX should really check that memInGB is an int
+        self.mem = '--mem=' + str(memInGB * 1024) if memInGB is not None else ''
         self.moduleList = moduleList
         self.logDir = logDir if logDir is not None else ''
         self.queue = '--exclusive' if queue is not None else ''
