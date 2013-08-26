@@ -6,7 +6,7 @@ pipeline = {
 }
 
 stageDefaults = {
-    "distributed": False,
+    "distributed": True,
     "walltime": "00:10:00",
     "memInGB": 1,
     "queue": "batch",

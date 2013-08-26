@@ -146,7 +146,7 @@ class SLURM_Job(object):
         self.command = command
         self.walltime = '--time=' + walltime if walltime is not None else ''
         self.name = '--job-name=' + name if name is not None else ''
-        self.memInGB = '--mem=' + str(int(memInGB) * 1024) if is_int_str(memInGB) else ''
+        self.mem = '--mem=' + str(int(memInGB) * 1024) if is_int_str(memInGB) else ''
         self.moduleList = moduleList
         self.logDir = logDir if logDir is not None else ''
         self.queue = '--exclusive' if queue is not None else ''
@@ -167,9 +167,10 @@ class SLURM_Job(object):
         file.flush()
         stderr_file = os.path.join(self.logDir, stage + '.%j.stderr')
         stdout_file = os.path.join(self.logDir, stage + '.%j.stdout')
-        command = 'srun --error={} --output={} {} {} {} {} bash {}'.format(
-            stderr_file, stdout_file,
-            self.literals, self.queue, self.name, self.walltime, file.name)
+        command = 'srun --error={stderr} --output={stdout} {memory} {literals} {queue} {jobname} {walltime} bash {file_name}'.format(
+            stderr=stderr_file, stdout=stdout_file, memory=self.mem,
+            literals=self.literals, queue=self.queue, jobname=self.name,
+            walltime=self.walltime, file_name=file.name)
         with open(logFilename, 'w') as logFile:
             logFile.write(self.__str__())
             logFile.write('\n# ' + command + '\n')
