@@ -20,6 +20,19 @@ Authors:
 
 Bernie Pope, Clare Sloggett, Gayle Philip, Matthew Wakefield
 
+Installation:
+-------------
+
+To install, clone this repository and run `setup.py`:
+
+    git clone https://github.com/bjpop/rubra
+    cd rubra
+    python setup.py install
+
+If you are on a system where you do not have administrative privileges, we
+suggest using virtualenv ( http://www.virtualenv.org/ ). On HPC systems you 
+may find virtualenv is already installed.
+
 Usage:
 ------
 
