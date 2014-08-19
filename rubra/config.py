@@ -10,7 +10,10 @@ def set_config(config):
     it may be referred to in the pipeline.'''
     global GLOBAL_PIPELINE_CONFIG
     GLOBAL_PIPELINE_CONFIG = config
-    print(GLOBAL_PIPELINE_CONFIG)
+
+def get_config():
+    '''Return the value of the global configuration file'''
+    return GLOBAL_PIPELINE_CONFIG
 
 def get_stage_options(options, stage, optionName):
     '''Look for a particular option in a stage, otherwise return the default'''

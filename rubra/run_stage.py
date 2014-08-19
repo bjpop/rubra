@@ -2,21 +2,31 @@
 
 import re
 import subprocess
+from logger import get_logger, log_info
+from config import get_config, get_command, get_stage_options
+from ruffus.drmaa_wrapper import run_job, error_drmaa_job
+import drmaa
 
 GLOBAL_DRMAA_SESSION = None
 
+def get_global_drmaa_session():
+    return GLOBAL_DRMAA_SESSION
+
 def finalize_drmaa_session():
     global GLOBAL_DRMAA_SESSION
-    GLOBAL_DRMAA_SESSION.exit()
+    if GLOBAL_DRMAA_SESSION is not None:
+        GLOBAL_DRMAA_SESSION.exit()
 
 # returns exit status of the executed command or None
 def run_stage(stage, *args):
-    command = getCommand(stage, GLOBAL_PIPELINE_CONFIG)
+    global_config = get_config()
+    command = get_command(stage, global_config)
     commandStr = command(*args)
     logStr = stage + ': ' + commandStr
-    log_info(logStr, GLOBAL_PIPELINE_LOGGER)
-    if get_stage_options(GLOBAL_PIPELINE_CONFIG, stage, 'distributed'):
-        distributedCommand(stage, commandStr, GLOBAL_PIPELINE_CONFIG)
+    global_logger = get_logger()
+    log_info(logStr, global_logger)
+    if get_stage_options(global_config, stage, 'distributed'):
+        distributedCommand(stage, commandStr, global_config)
     else:
         (stdoutStr, stderrStr, exitStatus) = shell_command(commandStr)
         if exitStatus != 0:
@@ -27,11 +37,11 @@ def run_stage(stage, *args):
 # XXX need to set walltime and queue and do something about modules
 def distributedCommand(stage, command, options):
 
+    global GLOBAL_DRMAA_SESSION
+
     # initialise drmaa session the first time this is called
-    if global_drmaa_session is None:
+    if GLOBAL_DRMAA_SESSION is None:
         try:
-            from ruffus.drmaa_wrapper import run_job, error_drmaa_job
-            import drmaa
             GLOBAL_DRMAA_SESSION = drmaa.Session()
             GLOBAL_DRMAA_SESSION.initialize()
         except RuntimeError as e:
@@ -42,7 +52,7 @@ def distributedCommand(stage, command, options):
     job_pre_script = get_stage_options(options, stage, 'pre_script')
     job_post_script = get_stage_options(options, stage, 'post_script')
 
-    if global_drmaa_session is None:
+    if GLOBAL_DRMAA_SESSION is None:
         exit("drmaa_session not correctly intialised")
 
     command_script = ''
@@ -55,10 +65,11 @@ def distributedCommand(stage, command, options):
     try:
         stdout_res = ''
         stderr_res = ''
+        global_logger = get_logger()
         stdout_res, stderr_res = \
             run_job(command_script,
                 job_name = stage,
-                logger = GLOBAL_PIPELINE_LOGGER['proxy'],
+                logger = global_logger['proxy'],
                 drmaa_session = GLOBAL_DRMAA_SESSION,
                 run_locally = False,
                 retain_job_scripts = True,
