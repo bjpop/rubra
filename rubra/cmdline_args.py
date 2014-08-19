@@ -2,7 +2,37 @@
 
 import argparse
 from version import rubra_version
+from ruffus import cmdline
 
+def get_cmdline_args():
+    parser = cmdline.get_argparse('A bioinformatics pipeline system.', ignored_args = ["version"])
+    parser.add_argument(
+        'pipeline',
+        metavar='PIPELINE_FILE',
+        type=str,
+        help='Your Ruffus pipeline stages (a Python module)')
+    parser.add_argument(
+        '--config',
+        metavar='CONFIG_FILE',
+        type=str,
+        nargs='+',
+        required=True,
+        help='One or more configuration files (Python modules)')
+    parser.add_argument(
+        '--version', action='version', version='%(prog)s ' + rubra_version)
+    parser.add_argument(
+        '--rebuild',
+        type=str,
+        choices=('fromstart', 'fromend'),
+        required=False,
+        default='fromstart',
+        help='rebuild outputs by working back from end tasks or forwards \
+              from start tasks (default is fromstart)')
+    return parser.parse_args()
+
+
+
+'''
 def get_cmdline_args():
     return parser.parse_args()
 
@@ -60,3 +90,4 @@ parser.add_argument(
           from start tasks (default is fromstart)')
 parser.add_argument(
     '--version', action='version', version='%(prog)s ' + rubra_version)
+'''

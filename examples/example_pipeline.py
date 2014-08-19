@@ -11,23 +11,19 @@ them up.
 
 '''
 
-from ruffus import *
-from rubra.utils import (runStageCheck)
+from ruffus import (suffix, transform, merge)
+from rubra.run_stage import (run_stage)
 
 # the input files
 data_files = ['test/data1.txt', 'test/data2.txt']
 
-
 # count the number of lines in a file
-@transform(data_files, suffix('.txt'), ['.count', '.count.Success'])
-def countLines(file, outputs):
-    output, flagFile = outputs
-    runStageCheck('countLines', flagFile, file, output)
-
+@transform(data_files, suffix('.txt'), '.count')
+def count_lines(file, output):
+    run_stage('count_lines', file, output)
 
 # sum the counts from the previous stage
-@merge(countLines, ['test/total.txt', 'test/total.Success'])
-def total(files, outputs):
-    files = ' '.join(map(lambda pair: pair[0], files))
-    output, flagFile = outputs
-    runStageCheck('total', flagFile, files, output)
+@merge(count_lines, 'test/total.txt')
+def total(files, output):
+    files = ' '.join(files)
+    run_stage('total', files, output)
