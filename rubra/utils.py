@@ -58,6 +58,11 @@ def zero_file(file):
             # change the time of the file back to what it was
             os.utime(file, (timeInfo.st_atime, timeInfo.st_mtime))
 
+def split_path(path):
+    (prefix, base) = os.path.split(path)
+    (name, ext) = os.path.splitext(base)
+    return (prefix, name, ext)
+
 def mk_log_file(log_dir, full_filename, extension):
-    prefix, name, ext = splitPath(full_filename)
+    prefix, name, ext = split_path(full_filename)
     return os.path.join(log_dir, name + extension)
