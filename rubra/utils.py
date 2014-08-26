@@ -42,7 +42,7 @@ def drop_py_suffix(filename):
     else:
         return filename
 
-def zeroFile(file):
+def zero_file(file):
     '''truncate a file to zero bytes, and preserve its original
     modification time'''
     if os.path.exists(file):
@@ -57,3 +57,7 @@ def zeroFile(file):
             f.close()
             # change the time of the file back to what it was
             os.utime(file, (timeInfo.st_atime, timeInfo.st_mtime))
+
+def mk_log_file(log_dir, full_filename, extension):
+    prefix, name, ext = splitPath(full_filename)
+    return os.path.join(log_dir, name + extension)
