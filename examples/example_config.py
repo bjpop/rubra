@@ -6,12 +6,12 @@ pipeline = {
 }
 
 stageDefaults = {
-    "distributed": False,
+    "distributed": True,
     "walltime": "00:10:00",
     "memInGB": 1,
     "queue": "batch",
     "modules": ["python-gcc"],
-    "jobscript": "# put jobscript stuff here",
+    #"jobscript": "# put jobscript stuff here",
 }
 stages = {
     "countLines": {
