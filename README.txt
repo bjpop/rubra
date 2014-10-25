@@ -20,6 +20,17 @@ Authors:
 
 Bernie Pope, Clare Sloggett, Gayle Philip, Matthew Wakefield
 
+Citation:
+---------
+
+If you use Rubra in your research, please cite the poster
+at http://figshare.com/articles/Rubra_flexible_distributed_pipelines/895626
+like so:
+
+Sloggett, Clare; Wakefield, Matthew; Philip, Gayle; Pope, Bernard (2014): 
+Rubra - flexible distributed pipelines. figshare. 
+http://dx.doi.org/10.6084/m9.figshare.895626
+
 Usage:
 ------
 
