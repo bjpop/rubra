@@ -18,7 +18,7 @@ setup(
      with support for running pipeline stages on a distributed compute cluster.',
     long_description=open('README.txt').read(),
     install_requires=[
-        "ruffus >= 2.0.0",
+        "ruffus==2.2",
     ],
     classifiers=[
           'Development Status :: 4 - Beta',
